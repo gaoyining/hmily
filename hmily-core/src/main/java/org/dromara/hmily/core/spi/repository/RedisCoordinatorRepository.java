@@ -19,6 +19,8 @@ package org.dromara.hmily.core.spi.repository;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import org.dromara.hmily.annotation.HmilySPI;
+import org.dromara.hmily.common.utils.StringUtils;
 import org.dromara.hmily.common.bean.adapter.CoordinatorRepositoryAdapter;
 import org.dromara.hmily.common.bean.entity.HmilyTransaction;
 import org.dromara.hmily.common.config.HmilyConfig;
@@ -34,7 +36,6 @@ import org.dromara.hmily.common.serializer.ObjectSerializer;
 import org.dromara.hmily.common.utils.LogUtil;
 import org.dromara.hmily.common.utils.RepositoryConvertUtils;
 import org.dromara.hmily.common.utils.RepositoryPathUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.dromara.hmily.core.spi.HmilyCoordinatorRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +56,7 @@ import java.util.stream.Collectors;
  *
  * @author xiaoyu
  */
+@HmilySPI("redis")
 public class RedisCoordinatorRepository implements HmilyCoordinatorRepository {
 
     /**
@@ -95,7 +97,7 @@ public class RedisCoordinatorRepository implements HmilyCoordinatorRepository {
             final String redisKey = RepositoryPathUtils.buildRedisKey(keyPrefix, hmilyTransaction.getTransId());
             hmilyTransaction.setVersion(hmilyTransaction.getVersion() + 1);
             hmilyTransaction.setLastTime(new Date());
-            hmilyTransaction.setRetriedCount(hmilyTransaction.getRetriedCount() + 1);
+            hmilyTransaction.setRetriedCount(hmilyTransaction.getRetriedCount());
             jedisClient.set(redisKey, RepositoryConvertUtils.convert(hmilyTransaction, objectSerializer));
             return ROWS;
         } catch (Exception e) {
@@ -167,7 +169,7 @@ public class RedisCoordinatorRepository implements HmilyCoordinatorRepository {
     public List<HmilyTransaction> listAllByDelay(final Date date) {
         final List<HmilyTransaction> hmilyTransactions = listAll();
         return hmilyTransactions.stream()
-                .filter(tccTransaction -> tccTransaction.getLastTime().compareTo(date) > 0)
+                .filter(tccTransaction -> tccTransaction.getLastTime().compareTo(date) < 0)
                 .collect(Collectors.toList());
     }
 

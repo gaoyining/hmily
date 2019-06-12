@@ -17,16 +17,14 @@
 
 package org.dromara.hmily.springcloud.interceptor;
 
-import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.dromara.hmily.common.bean.context.HmilyTransactionContext;
-import org.dromara.hmily.common.constant.CommonConstant;
 import org.dromara.hmily.common.enums.HmilyRoleEnum;
-import org.dromara.hmily.common.utils.GsonUtils;
 import org.dromara.hmily.common.utils.LogUtil;
 import org.dromara.hmily.core.concurrent.threadlocal.HmilyTransactionContextLocal;
 import org.dromara.hmily.core.interceptor.HmilyTransactionInterceptor;
 import org.dromara.hmily.core.service.HmilyTransactionAspectService;
+import org.dromara.hmily.core.mediator.RpcMediator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,22 +59,20 @@ public class SpringCloudHmilyTransactionInterceptor implements HmilyTransactionI
 
     @Override
     public Object interceptor(final ProceedingJoinPoint pjp) throws Throwable {
-        HmilyTransactionContext hmilyTransactionContext;
-        RequestAttributes requestAttributes = null;
-        try {
-            requestAttributes = RequestContextHolder.currentRequestAttributes();
-        } catch (Throwable ex) {
-            LogUtil.warn(LOGGER, () -> "can not acquire request info:" + ex.getLocalizedMessage());
-        }
-
-        HttpServletRequest request = requestAttributes == null ? null : ((ServletRequestAttributes) requestAttributes).getRequest();
-        String context = request == null ? null : request.getHeader(CommonConstant.HMILY_TRANSACTION_CONTEXT);
-        if (StringUtils.isNoneBlank(context)) {
-            hmilyTransactionContext = GsonUtils.getInstance().fromJson(context, HmilyTransactionContext.class);
-        } else {
-            hmilyTransactionContext = HmilyTransactionContextLocal.getInstance().get();
-            if (Objects.nonNull(hmilyTransactionContext)) {
+        HmilyTransactionContext hmilyTransactionContext = HmilyTransactionContextLocal.getInstance().get();
+        if (Objects.nonNull(hmilyTransactionContext)) {
+            if (HmilyRoleEnum.START.getCode() == hmilyTransactionContext.getRole()) {
                 hmilyTransactionContext.setRole(HmilyRoleEnum.SPRING_CLOUD.getCode());
+            }
+        } else {
+            try {
+                final RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
+                hmilyTransactionContext = RpcMediator.getInstance().acquire(key -> {
+                    HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
+                    return request.getHeader(key);
+                });
+            } catch (IllegalStateException ex) {
+                LogUtil.warn(LOGGER, () -> "can not acquire request info:" + ex.getLocalizedMessage());
             }
         }
         return hmilyTransactionAspectService.invoke(hmilyTransactionContext, pjp);

@@ -24,6 +24,5 @@ logging:
         org.dromara.hmily.bonuspoint: debug
         org.dromara.hmily.lottery: debug
         org.dromara.hmily: debug
-        io.netty: info
     path: "./logs"
 

@@ -17,7 +17,7 @@
 
 package org.dromara.hmily.core.service.handler;
 
-import org.apache.commons.lang3.StringUtils;
+import org.dromara.hmily.common.utils.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.dromara.hmily.annotation.Hmily;
@@ -43,6 +43,11 @@ public class LocalHmilyTransactionHandler implements HmilyTransactionHandler {
 
     private final HmilyTransactionExecutor hmilyTransactionExecutor;
 
+    /**
+     * Instantiates a new Local hmily transaction handler.
+     *
+     * @param hmilyTransactionExecutor the hmily transaction executor
+     */
     @Autowired
     public LocalHmilyTransactionHandler(final HmilyTransactionExecutor hmilyTransactionExecutor) {
         this.hmilyTransactionExecutor = hmilyTransactionExecutor;

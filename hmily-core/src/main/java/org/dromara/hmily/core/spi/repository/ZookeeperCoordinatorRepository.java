@@ -18,6 +18,7 @@
 package org.dromara.hmily.core.spi.repository;
 
 import com.google.common.collect.Lists;
+import org.dromara.hmily.annotation.HmilySPI;
 import org.dromara.hmily.common.bean.adapter.CoordinatorRepositoryAdapter;
 import org.dromara.hmily.common.bean.entity.HmilyTransaction;
 import org.dromara.hmily.common.config.HmilyConfig;
@@ -29,8 +30,8 @@ import org.dromara.hmily.common.serializer.ObjectSerializer;
 import org.dromara.hmily.common.utils.LogUtil;
 import org.dromara.hmily.common.utils.RepositoryConvertUtils;
 import org.dromara.hmily.common.utils.RepositoryPathUtils;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.dromara.hmily.common.utils.CollectionUtils;
+import org.dromara.hmily.common.utils.StringUtils;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.Watcher;
@@ -51,6 +52,7 @@ import java.util.stream.Collectors;
  *
  * @author xiaoyu
  */
+@HmilySPI("zookeeper")
 public class ZookeeperCoordinatorRepository implements HmilyCoordinatorRepository {
 
     /**
@@ -175,7 +177,7 @@ public class ZookeeperCoordinatorRepository implements HmilyCoordinatorRepositor
     public List<HmilyTransaction> listAllByDelay(final Date date) {
         final List<HmilyTransaction> hmilyTransactions = listAll();
         return hmilyTransactions.stream()
-                .filter(tccTransaction -> tccTransaction.getLastTime().compareTo(date) > 0)
+                .filter(transaction -> transaction.getLastTime().compareTo(date) > 0)
                 .collect(Collectors.toList());
     }
 

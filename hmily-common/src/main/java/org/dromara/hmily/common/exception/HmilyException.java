@@ -22,7 +22,7 @@ package org.dromara.hmily.common.exception;
  *
  * @author xiaoyu
  */
-public class HmilyException extends Exception {
+public class HmilyException extends RuntimeException {
 
     private static final long serialVersionUID = -948934144333391208L;
 

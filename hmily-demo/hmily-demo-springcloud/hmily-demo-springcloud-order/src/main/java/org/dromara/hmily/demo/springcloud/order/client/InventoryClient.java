@@ -18,7 +18,6 @@
 package org.dromara.hmily.demo.springcloud.order.client;
 
 import org.dromara.hmily.annotation.Hmily;
-import org.dromara.hmily.demo.springcloud.order.configuration.MyConfiguration;
 import org.dromara.hmily.demo.springcloud.order.dto.InventoryDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,14 +25,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
+ * The interface Inventory client.
+ *
  * @author xiaoyu
  */
-@FeignClient(value = "inventory-service", configuration = MyConfiguration.class)
-@SuppressWarnings("all")
+@FeignClient(value = "inventory-service")
 public interface InventoryClient {
 
     /**
-     * 库存扣减
+     * 库存扣减.
      *
      * @param inventoryDTO 实体对象
      * @return true 成功
@@ -43,19 +43,18 @@ public interface InventoryClient {
     Boolean decrease(@RequestBody InventoryDTO inventoryDTO);
 
 
-
     /**
-     * 获取商品库存
+     * 获取商品库存.
      *
      * @param productId 商品id
-     * @return InventoryDO
+     * @return InventoryDO integer
      */
     @RequestMapping("/inventory-service/inventory/findByProductId")
     Integer findByProductId(@RequestParam("productId") String productId);
 
 
     /**
-     * 模拟库存扣减异常
+     * 模拟库存扣减异常.
      *
      * @param inventoryDTO 实体对象
      * @return true 成功
@@ -66,7 +65,7 @@ public interface InventoryClient {
 
 
     /**
-     * 模拟库存扣减超时
+     * 模拟库存扣减超时.
      *
      * @param inventoryDTO 实体对象
      * @return true 成功

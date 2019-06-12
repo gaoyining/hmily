@@ -23,9 +23,9 @@ import org.dromara.hmily.demo.springcloud.account.entity.AccountDO;
 
 /**
  * AccountService.
+ *
  * @author xiaoyu
  */
-@SuppressWarnings("all")
 public interface AccountService {
 
     /**
@@ -39,6 +39,7 @@ public interface AccountService {
 
     /**
      * 获取用户账户信息.
+     *
      * @param userId 用户id
      * @return AccountDO
      */

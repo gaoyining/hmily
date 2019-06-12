@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.dromara.hmily.demo.springcloud.account;
 
 import org.mybatis.spring.annotation.MapperScan;
@@ -26,7 +27,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
- * The type Springcloud tcc account application.
+ * The type SpringCloud tcc account application.
  *
  * @author xiaoyu
  */
@@ -42,9 +43,8 @@ public class SpringCloudHmilyAccountApplication {
      *
      * @param args the input arguments
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         SpringApplication.run(SpringCloudHmilyAccountApplication.class, args);
     }
-
 
 }
