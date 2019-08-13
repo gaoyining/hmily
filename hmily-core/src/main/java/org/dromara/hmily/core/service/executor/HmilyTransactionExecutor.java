@@ -80,20 +80,20 @@ public class HmilyTransactionExecutor {
     }
 
     /**
-     * transaction preTry.
+     * 交易预先尝试。
      *
      * @param point cut point.
      * @return TccTransaction hmily transaction
      */
     public HmilyTransaction preTry(final ProceedingJoinPoint point) {
         LogUtil.debug(LOGGER, () -> "......hmily transaction starter....");
-        //build tccTransaction
+        //构建tccTransaction
         final HmilyTransaction hmilyTransaction = buildHmilyTransaction(point, HmilyRoleEnum.START.getCode(), null);
         //save tccTransaction in threadLocal
         CURRENT.set(hmilyTransaction);
         //publishEvent
         hmilyTransactionEventPublisher.publishEvent(hmilyTransaction, EventTypeEnum.SAVE.getCode());
-        //set TccTransactionContext this context transfer remote
+        //设置TccTransactionContext这个上下文传输远程
         HmilyTransactionContext context = new HmilyTransactionContext();
         //set action is try
         context.setAction(HmilyActionEnum.TRYING.getCode());
@@ -104,7 +104,7 @@ public class HmilyTransactionExecutor {
     }
 
     /**
-     * this is Participant transaction preTry.
+     * 这是参与者交易preTry。
      *
      * @param context transaction context.
      * @param point   cut point
@@ -117,7 +117,7 @@ public class HmilyTransactionExecutor {
         HmilyTransactionGuavaCacheManager.getInstance().cacheHmilyTransaction(hmilyTransaction);
         //publishEvent
         hmilyTransactionEventPublisher.publishEvent(hmilyTransaction, EventTypeEnum.SAVE.getCode());
-        //Nested transaction support
+        //嵌套事务支持
         context.setRole(HmilyRoleEnum.LOCAL.getCode());
         HmilyTransactionContextLocal.getInstance().set(context);
         return hmilyTransaction;

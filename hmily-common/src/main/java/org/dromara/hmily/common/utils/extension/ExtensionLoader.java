@@ -63,7 +63,7 @@ public final class ExtensionLoader<T> {
     }
 
     /**
-     * Gets activate extension.
+     * 获取激活扩展。
      *
      * @param value the value
      * @return the activate extension

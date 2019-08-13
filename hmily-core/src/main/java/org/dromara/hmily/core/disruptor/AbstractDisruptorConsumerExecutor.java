@@ -30,12 +30,12 @@ import java.util.Set;
 public abstract class AbstractDisruptorConsumerExecutor<T> {
 
     /**
-     * Recorded the subscription processing after the user needs to subscribe to the calculation result.
+     * 在用户需要订阅计算结果后记录订阅处理。
      */
     private Set<ExecutorSubscriber> subscribers = new HashSet<>();
 
     /**
-     * Add subscribers disruptor consumer executor.
+     * 添加订阅者disruptor消费者执行者。
      *
      * @param subscriber subscriber；
      * @return the disruptor consumer executor
@@ -46,7 +46,7 @@ public abstract class AbstractDisruptorConsumerExecutor<T> {
     }
 
     /**
-     * Add subscribers disruptor consumer executor.
+     * 添加订阅者disruptor消费者执行者。
      *
      * @param subscribers the subscribers
      * @return the disruptor consumer executor
@@ -57,7 +57,7 @@ public abstract class AbstractDisruptorConsumerExecutor<T> {
     }
 
     /**
-     * Gets subscribers.
+     * 获得订阅者。
      *
      * @return the subscribers
      */
@@ -66,7 +66,7 @@ public abstract class AbstractDisruptorConsumerExecutor<T> {
     }
 
     /**
-     * Perform the processing of the current event.
+     * 执行当前事件的处理。
      *
      * @param data the data
      */
